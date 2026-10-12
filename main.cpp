@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <algorithm>
 using namespace std;
 
@@ -10,15 +11,29 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-TreeNode* insert(TreeNode* root, int val) {
-    if (root == nullptr) {
-        return new TreeNode(val);
-    }
+TreeNode* buildTreeFromLevelOrder(const vector<int>& values) {
+    if (values.empty()) return nullptr;
     
-    if (val < root->val) {
-        root->left = insert(root->left, val);
-    } else {
-        root->right = insert(root->right, val);
+    TreeNode* root = new TreeNode(values[0]);
+    queue<TreeNode*> q;
+    q.push(root);
+    
+    int i = 1;
+    while (!q.empty() && i < values.size()) {
+        TreeNode* current = q.front();
+        q.pop();
+        
+        if (i < values.size()) {
+            current->left = new TreeNode(values[i]);
+            q.push(current->left);
+            i++;
+        }
+        
+        if (i < values.size()) {
+            current->right = new TreeNode(values[i]);
+            q.push(current->right);
+            i++;
+        }
     }
     
     return root;
@@ -54,11 +69,9 @@ int main() {
         cin >> values[i];
     }
     
-    // Build BST from first 7 values (level-order insertion)
-    TreeNode* root = nullptr;
-    for (int i = 0; i < 7; i++) {
-        root = insert(root, values[i]);
-    }
+    // Build tree from first 7 values (level-order structure)
+    vector<int> tree_values(values.begin(), values.begin() + 7);
+    TreeNode* root = buildTreeFromLevelOrder(tree_values);
     
     int k = values[7];
     
