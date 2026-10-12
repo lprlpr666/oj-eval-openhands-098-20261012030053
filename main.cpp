@@ -61,6 +61,13 @@ void findKthLargest(TreeNode* root, int k) {
     findKthLargest(root->left, k);
 }
 
+void deleteTree(TreeNode* root) {
+    if (root == nullptr) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
 int main() {
     vector<int> values(8);
     
@@ -76,11 +83,17 @@ int main() {
     int k = values[7];
     
     // Find kth largest element
-    visited_count = 0;
-    result = -1;
-    findKthLargest(root, k);
+    if (k >= 1 && k <= 7) {
+        visited_count = 0;
+        result = -1;
+        findKthLargest(root, k);
+        cout << result << endl;
+    } else {
+        cout << -1 << endl;
+    }
     
-    cout << result << endl;
+    // Clean up memory
+    deleteTree(root);
     
     return 0;
 }
